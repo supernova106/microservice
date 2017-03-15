@@ -1,0 +1,31 @@
+---
+- name: configure members of wheel group for passwordless sudo
+  become: yes
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: "^%wheel"
+    line: "%wheel ALL=(ALL) NOPASSWD: ALL"
+    state: present
+  tags:
+    - users
+
+- name: create os users
+  become: yes
+  user:
+    name: "{{ item.name }}"
+    groups: wheel
+  when: item.enabled is defined and item.enabled == 1
+  with_items: users
+  tags:
+    - users
+
+- name: delete os users
+  become: yes
+  user:
+    name: "{{ item.name }}"
+    state: absent
+    remove: yes
+  when: item.enabled is defined and item.enabled == 0
+  with_items: users
+  tags:
+    - users

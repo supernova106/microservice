@@ -1,0 +1,13 @@
+#!/bin/bash
+
+CONTAINER_NAME=cadvisor
+
+docker rm -f $CONTAINER_NAME
+docker run --name $CONTAINER_NAME \
+    -i \
+    --volume=/:/rootfs:ro \
+    --volume=/var/run:/var/run:rw \
+    --volume=/sys:/sys:ro \
+    --volume=/var/lib/docker/:/var/lib/docker:ro \
+    --publish=19998:8080 \
+    google/cadvisor:{{ cadvisor_tag }}

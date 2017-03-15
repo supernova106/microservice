@@ -1,0 +1,11 @@
+---
+- name: start supervisord
+  become: yes
+  shell: "{{ supervisord_exec_dir }}/supervisord -c /etc/supervisord.conf"
+  ignore_errors: true 
+  register: start_supervisord
+  notify: reload supervisord
+
+- name: reload supervisord
+  become: yes
+  shell: "{{ supervisord_exec_dir }}/supervisorctl reload"
