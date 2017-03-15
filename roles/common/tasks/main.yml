@@ -1,35 +1,63 @@
-- name: disable requiretty in sudoers
+---
+- name: install system packages
   become: yes
-  lineinfile:
-    dest: /etc/sudoers
-    state: present
-    regexp: ^.+requiretty$
-    line: "# Defaults requiretty"
-  tags:
-  - common
-
-- include: pkg_install.yml
-  when: ansible_os_family == 'RedHat'
-
-- include: pkg_install_debian.yml
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+  - build-essential 
+  - python-dev 
+  - python-pip 
+  - bridge-utils 
+  - ntp 
+  - zip 
+  - unzip 
+  - curl
+  - git
+  - jq
+  - openjdk-8-jdk
+  - libzmq1
   when: ansible_os_family == 'Debian'
+  tags:
+    - common
+
+- name: install system packages
+  become: yes
+  yum:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+  - epel-release  
+  - python-pip
+  - python3-pip
+  - unzip 
+  - curl
+  - git
+  - jq
+  - java-1.8.0-openjdk
+  - policycoreutils-python
+  - libselinux-python
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - common
+
+- name: install latest awscli boto docker_py
+  pip:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+  - pip
+  - setuptools
+  ignore_errors: True
+  tags:
+    - common
 
 - include: ulimit.yml
 
-- include: rc_local.yml
-
-- include: ssl.yml
-
-- include: users.yml
-
-- include: ssh.yml
-
-- include: hostname.yml
-
-# install docker and supervisord
-
-- include: docker.yml
-
-# install additional services and reload supervisord
-# install netdata directly on the host machine
-- include: adds_on.yml
+- include: kernel.yml
+  include: supervisord.yml
+  include: docker.yml
+  when: ansible_os_family == 'Debian'

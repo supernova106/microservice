@@ -1,27 +1,4 @@
 ---
-# defaults file for common
-use_host_domain: false
-host_domain: ec2.internal
-default_dns: 10.0.0.2
-selinux_policy: targeted
-selinux_state: permissive
-
-# docker
-etcd_client_port: 2379
-docker_tcp_port: 2375
-docker_advertise_port: 2376
-docker_private_registry: private-registry.mi.razerapi.com
-
-# cadvisor
-cadvisor_tag: v0.22.0
-
 # ulimit
 limit_nofile: 1048576
 limit_noproc: 1048576
-
-provider: aws 
-cloud_init_providers:
-  - aws
-
-
-

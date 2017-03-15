@@ -1,4 +1,0 @@
----
-- name: rc_local file
-  become: yes
-  template: src=rc.local.j2 dest=/etc/rc.local

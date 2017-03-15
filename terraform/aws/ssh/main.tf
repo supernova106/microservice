@@ -1,5 +1,5 @@
-variable "short_name" {default = "pubsub"}
-variable "ssh_key" {default = "~/.ssh/pubsub.pub"}
+variable "short_name" {default = "elk"}
+variable "ssh_key" {default = "~/.ssh/elk.pub"}
 
 resource "aws_key_pair" "deployer" {
   key_name = "key-${var.short_name}"

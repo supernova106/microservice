@@ -1,0 +1,6 @@
+# base microservice ami
+---
+- hosts: all
+  vars:
+  roles:
+    - common
