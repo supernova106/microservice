@@ -3,8 +3,8 @@
 - simple & easy to manage
 
 # Dependencies
--[docker-zk-exhibitor](https://github.com/supernova106/docker-zk-exhibitor.git)
--[marathon](https://github.com/mesosphere/marathon)
+- [docker-zk-exhibitor](https://github.com/supernova106/docker-zk-exhibitor.git)
+- [marathon](https://github.com/mesosphere/marathon)
 
 # Supported Platform
 - AWS
