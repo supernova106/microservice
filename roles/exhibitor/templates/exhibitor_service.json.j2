@@ -1,0 +1,11 @@
+{ 
+  "service": {
+    "name": "exhibitor",
+    "port": 8080,
+    "check": {
+      "script": "{{ customized_bin_dir }}/supervisor_service_check.sh exhibitor",
+      "interval": "15s",
+      "timeout": "2s"
+    }
+  }
+}

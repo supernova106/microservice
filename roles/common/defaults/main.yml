@@ -2,3 +2,5 @@
 # ulimit
 limit_nofile: 1048576
 limit_noproc: 1048576
+
+customized_bin_dir: /opt/bin

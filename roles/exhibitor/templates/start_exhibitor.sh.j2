@@ -1,0 +1,19 @@
+#!/bin/bash
+
+CONTAINER_NAME=exhibitor
+
+docker rm -f $CONTAINER_NAME
+docker run --name $CONTAINER_NAME \
+    -i \
+    --net=host \
+    -v "{{ zk_data_dir }}:{{ zk_data_dir }}:rw" \
+    -v "{{ zk_log_dir }}:{{ zk_log_dir }}:rw" \
+    -e ZK_DATA_DIR="{{ zk_data_dir }}" \
+    -e ZK_LOG_DIR="{{ zk_log_dir }}" \
+    -e ZK_ENSEMBLE_SIZE="{{ exhibitor_size }}" \
+    -e AWS_REGION="{{ exhibitor_s3_region }}"
+    -e S3_BUCKET="{{ exhibitor_s3_bucket }}" \
+    -e S3_PREFIX="{{ exhibitor_config_prefix }}" \
+    -e HOSTNAME="{{ exhibitor_hostname }}" \
+    "{{ exhibitor_image }}:{{ exhibitor_image_tag }}"
+

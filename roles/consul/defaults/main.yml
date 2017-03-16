@@ -1,0 +1,25 @@
+---
+consul_size: 3
+consul_mode: server
+consul_package: 0.7.5
+consul_ui_package: 0.7.5
+consul_cli_package: 0.3.1
+consul_dc: dc1
+consul_dc_group: dc={{ consul_dc }}
+consul_log_level: "info"
+consul_servers_group: role=control
+consul_is_server: "{{ consul_servers_group in group_names }}"
+consul_advertise: "{{ private_ipv4 }}"
+consul_retry_join: "{% for host in groups[consul_servers_group] | intersect(groups[consul_dc_group]) %}\"{{ hostvars[host].private_ipv4 }}\"{% if not loop.last %}, {% endif %}{% endfor %}"
+consul_bootstrap_expect: "{{ groups[consul_servers_group] | intersect(groups[consul_dc_group]) | length }}"
+consul_data_dir: /var/lib/consul
+consul_ui_dir: /usr/share/consul-ui
+consul_config_dir: /etc/consul.d
+
+consul_leader: mi-control-01
+host_domain: razerapi.com
+
+supervisord_exec_dir: /usr/local/bin
+customized_bin_dir: /opt/bin
+ansible_check_mode: True
+

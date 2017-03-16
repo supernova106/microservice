@@ -1,0 +1,8 @@
+---
+- name: ensure customized bin
+  sudo: yes
+  file:
+    path: "{{ customized_bin_dir }}"
+    state: directory
+  tags:
+    - bootstrap

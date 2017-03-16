@@ -2,5 +2,7 @@
 ---
 - hosts: all
   vars:
+    consul_servers_group: role=control
   roles:
-    - common
+#    - common
+    - consul

@@ -1,0 +1,136 @@
+---
+- name: ensure customized bin
+  become: yes
+  file:
+    path: "{{ customized_bin_dir }}"
+    state: directory
+  tags:
+    - consul
+
+- name: install scripts
+  become: yes
+  copy:
+    src: "{{ item }}"
+    dest: /usr/local/bin/
+    mode: 0755
+  with_items:
+    - consul-wait-for-leader.sh
+    - consul-rolling-restart.sh
+    - check-service-active
+  tags:
+    - consul
+
+# Setup consul
+- name: setup consul
+  become: yes
+  unarchive: 
+    src: https://releases.hashicorp.com/consul/{{ consul_package }}/consul_{{ consul_package }}_linux_amd64.zip
+    dest: /usr/bin
+    mode: 0755
+    remote_src: True
+  ignore_errors: "{{ ansible_check_mode }}"
+  tags:
+    - consul
+
+- name: ensure consul data dir
+  become: yes
+  file: 
+    path: "{{ consul_data_dir }}"
+    state: directory
+  tags:
+    - consul
+
+- name: ensure consul config dir
+  become: yes
+  file: 
+    path: "{{ consul_config_dir }}" 
+    state: directory
+  tags:
+    - consul
+
+- name: ensure consul ui dir
+  become: yes
+  file: 
+    path: "{{ consul_ui_dir }}"
+    state: directory
+  tags:
+    - consul
+
+- name: setup ui file
+  become: yes
+  unarchive:
+    src: https://releases.hashicorp.com/consul/{{ consul_ui_package }}/consul_{{ consul_ui_package }}_web_ui.zip
+    dest: "{{ consul_ui_dir }}"
+    remote_src: True
+  ignore_errors: "{{ ansible_check_mode }}"
+  tags:
+    - consul
+
+- name: download consul-cli
+  become: yes
+  unarchive:
+    src: https://github.com/CiscoCloud/consul-cli/releases/download/v{{ consul_cli_package }}/consul-cli_{{ consul_cli_package }}_linux_amd64.tar.gz
+    dest: /var/tmp/
+    remote_src: True
+  ignore_errors: "{{ ansible_check_mode }}"
+  tags:
+    - consul
+
+- name: setup consul-cli
+  become: yes
+  copy:
+    src: /var/tmp/consul-cli_{{ consul_cli_package }}_linux_amd64/consul-cli
+    dest: /usr/bin/consul-cli
+    mode: 0755
+    remote_src: True
+  tags:
+    - consul
+
+- name: setup systemd consul service
+  become: yes
+  template:
+    src: consul.service.j2
+    dest: /etc/systemd/system/consul.service
+    mode: 0644
+  tags:
+    - consul
+
+- name: add consul config
+  become: yes
+  template:
+    src: consul.json.j2
+    dest: "{{ consul_config_dir }}/consul.json"
+  notify:
+    - restart consul
+  tags:
+    - consul
+
+- name: register docker with consul
+  sudo: yes
+  copy:
+    src: docker-service.json
+    dest: /etc/consul.d
+  notify:
+    - restart consul
+  tags:
+    - consul
+
+- name: start consul
+  sudo: yes
+  service:
+    name: consul
+    enabled: yes
+    state: started
+  tags:
+    - consul
+
+# Give consul time to elect a leader
+- name: wait for leader
+  command: /usr/local/bin/consul-wait-for-leader.sh
+  tags:
+    - consul
+
+- meta: flush_handlers
+  tags:
+    - consul
+

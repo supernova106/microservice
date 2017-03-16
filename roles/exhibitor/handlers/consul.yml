@@ -1,0 +1,4 @@
+---
+- name: reload consul config
+  sudo: yes
+  shell: "{{ customized_bin_dir }}/consul reload"

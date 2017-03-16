@@ -14,7 +14,7 @@
   - bridge-utils 
   - ntp 
   - zip 
-  - unzip 
+  - unzip
   - curl
   - git
   - jq
@@ -58,8 +58,9 @@
     - common
 
 - include: ulimit.yml
-
 - include: kernel.yml
-  include: supervisord.yml
-  include: docker.yml
-  when: ansible_os_family == 'Debian'
+- include: supervisord.yml
+- include: docker.yml
+- include: customize.yml
+
+

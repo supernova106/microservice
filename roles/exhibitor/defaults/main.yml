@@ -1,0 +1,10 @@
+---
+exhibitor_image:  supernova106/docker-zk-exhibitor
+exhibitor_image_tag: latest
+exhibitor_s3_region: us-east-1
+exhibitor_s3_bucket: rzdev
+exhibitor_config_prefix: zkconfig
+exhibitor_hostname: exhibitor.service.consul
+exhibitor_size: 3
+zk_data_dir: /var/lib/zookeeper
+zk_log_dir: /var/log/zookeeper

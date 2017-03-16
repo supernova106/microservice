@@ -1,9 +1,19 @@
 ---
 - name: install supervisord
   become: yes
-  pip: "name=supervisor version={{ supervisord_version }}"
+  shell: "/usr/bin/pip install supervisor=={{ supervisord_version }}"
   tags:
     - common
+
+- name: setup supervisor service check script
+  become: yes
+  template:
+    src: supervisor_service_check.sh.j2
+    dest: "{{ customized_bin_dir }}/supervisor_service_check.sh"
+    mode: 0755
+  notify: restart consul
+  tags:
+    - consul
 
 - name: ensuring required supervisord directories
   become: yes
@@ -17,10 +27,10 @@
 
 - name: check supervisord running
   become: yes
-  shell: "ps aux"
+  shell: "/usr/bin/pgrep supervisord"
   register: check_supervisord_running
 
-- name: run supervisord if not running
-  become: yes
-  shell: "{{ supervisord_exec_dir }}/supervisord -c /etc/supervisord.conf"
-  when: check_supervisord_running.stdout.find('supervisord') == -1
+- shell: echo "supervisord is not running"
+  when: check_supervisord_running.stdout == ""
+  notify:
+    - start supervisord
