@@ -1,8 +1,19 @@
 ---
 - name: ensure customized bin
-  sudo: yes
+  become: yes
   file:
     path: "{{ customized_bin_dir }}"
     state: directory
   tags:
     - bootstrap
+
+- name: configure dnsmasq
+  become: yes
+  copy:
+    src: 10-consul
+    dest: /etc/dnsmasq.d/
+  notify:
+    - restart NetworkManager
+    - restart dnsmasq
+  tags:
+    - dnsmasq

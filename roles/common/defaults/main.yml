@@ -3,4 +3,5 @@
 limit_nofile: 1048576
 limit_noproc: 1048576
 
+upgrade_docker: False
 customized_bin_dir: /opt/bin

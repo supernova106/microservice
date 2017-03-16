@@ -4,6 +4,7 @@
   shell: "curl -sSL https://get.docker.com/ | sh"
   register: command_result
   ignore_errors: True
+  when: "{{ upgrade_docker|bool }}"
   tags:
     - bootstrap
     - docker
