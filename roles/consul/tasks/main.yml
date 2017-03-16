@@ -111,7 +111,7 @@
     src: docker-service.json
     dest: /etc/consul.d
   notify:
-    - restart consul
+    - reload consul
   tags:
     - consul
 

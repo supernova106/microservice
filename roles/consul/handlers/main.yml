@@ -5,6 +5,10 @@
   notify:
     - wait for consul to listen
 
+- name: reload consul
+  become: yes
+  command: /usr/bin/consul reload
+
 - name: wait for consul to listen
   become: yes
   wait_for:

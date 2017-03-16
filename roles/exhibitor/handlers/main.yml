@@ -1,6 +1,6 @@
 ---
 - name: restart exhibitor
-  sudo: yes
+  become: yes
   supervisorctl: 
     name: exhibitor
     state: restarted

@@ -5,5 +5,5 @@
     # set which role is consul server
     consul_servers_group: role=control
   roles:
-    - common
-#    - consul
+    #- common
+    - consul
