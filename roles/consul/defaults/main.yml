@@ -16,9 +16,6 @@ consul_data_dir: /var/lib/consul
 consul_ui_dir: /usr/share/consul-ui
 consul_config_dir: /etc/consul.d
 
-consul_leader: mi-control-01
-host_domain: razerapi.com
-
 supervisord_exec_dir: /usr/local/bin
 customized_bin_dir: /opt/bin
 ansible_check_mode: True
