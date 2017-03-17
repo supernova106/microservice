@@ -1,9 +1,22 @@
 ---
+- name: reload systemd
+  become: yes
+  command: systemctl daemon-reload
+
+- name: restart traefik
+  become: yes
+  command: systemctl restart traefik
+
+- name: reload consul
+  become: yes
+  command: /usr/bin/consul reload
+ubuntu@ip-172-31-20-1:~/microservice$ cat roles/traefik/tasks/main.yml
+---
 - name: install traefik
   become: yes
-  get_url: 
+  get_url:
     url: https://github.com/containous/traefik/releases/download/{{ traefik_package }}/traefik
-    desc: /usr/bin/
+    dest: /usr/bin/
     mode: 0775
   # when: ansible_os_family == 'Debian'
   tags:
@@ -20,8 +33,9 @@
     - traefik
     - bootstrap
 
-- name: create traefik access log file 
-  command: touch "{{ traefik_log_dir }}"
+- name: create traefik access log file
+  become: yes
+  command: touch "{{ traefik_log_dir }}/access.log"
   args:
     creates: "{{ traefik_log_dir }}/access.log"
   tags:
@@ -34,6 +48,16 @@
     dest: /etc/systemd/system/traefik.service.d
     state: directory
     mode: 0755
+  tags:
+    - traefik
+    - bootstrap
+
+- name: add systemd traefik servicer
+  become: yes
+  template:
+    src: traefik_service.conf.j2
+    dest: /etc/systemd/system/traefik.service
+    mode: 0644
   tags:
     - traefik
     - bootstrap

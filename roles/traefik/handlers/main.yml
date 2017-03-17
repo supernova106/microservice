@@ -6,3 +6,7 @@
 - name: restart traefik
   become: yes
   command: systemctl restart traefik
+
+- name: reload consul
+  become: yes
+  command: /usr/bin/consul reload
