@@ -1,0 +1,12 @@
+[program:traefik]
+command= "/usr/bin/traefik --c /etc/traefik.d/traefik.toml"
+autostart=true
+autorestart=true
+startretries=999
+redirect_stderr=True
+nodaemon = False
+debug = False
+stdout_logfile = "{{ traefik_log_dir }}/traefik.out"
+stderr_logfile = "{{ traefik_log_dir }}/traefik.err"
+loglevel = "info"
+stopasgroup=true
