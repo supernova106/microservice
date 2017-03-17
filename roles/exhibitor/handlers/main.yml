@@ -5,9 +5,17 @@
     name: exhibitor
     state: restarted
     supervisorctl_path: "{{ supervisord_exec_dir }}/supervisorctl"
+  notify:
+    - wait for zookeeper to listen
 
 - name: reload supervisor
   become: yes
   command: "{{ supervisord_exec_dir }}/supervisorctl reload"
 
 - include: consul.yml
+
+- name: wait for zookeeper to listen
+  become: yes
+  command: "/usr/local/bin/zookeeper-wait-for-listen.sh {{ inventory_hostname }}"
+
+

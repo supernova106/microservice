@@ -12,15 +12,6 @@
   shell: "{{ supervisord_exec_dir }}/supervisorctl reload"
   when: start_supervisord|failed
 
-- name: restart NetworkManager
-  become: yes
-  service:
-    name: NetworkManager
-    enabled: yes
-    state: started
-  tags:
-    - dnsmasq
-
 - name: restart dnsmasq
   become: yes
   service:

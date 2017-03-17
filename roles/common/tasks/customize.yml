@@ -13,7 +13,6 @@
     src: 10-consul
     dest: /etc/dnsmasq.d/
   notify:
-    - restart NetworkManager
     - restart dnsmasq
   tags:
     - dnsmasq

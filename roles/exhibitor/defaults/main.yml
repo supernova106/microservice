@@ -4,12 +4,27 @@ exhibitor_image_tag: latest
 exhibitor_s3_region: us-east-1
 exhibitor_s3_bucket: rzdev
 exhibitor_config_prefix: zkconfig
-exhibitor_hostname: "{{ inventory_hostname }}"
+exhibitor_hostname: "{{ private_ipv4 }}"
 exhibitor_size: 3
 zk_data_dir: /var/lib/zookeeper
 zk_log_dir: /var/log/zookeeper
+zk_install_dir: /opt/zookeeper
+zk_config_dir: "{{ zk_install_dir }}/conf"
 supervisord_exec_dir: /usr/local/bin
 supervisord_conf_dir: /etc/supervisord
 customized_bin_dir: /opt/bin
 zk_log_level: "info"
 zk_uninstall: False
+
+# Passed to Consul via Registrator for service discovery
+zookeeper_service: zookeeper
+zookeeper_service_tags: "{{ zookeeper_service }}"
+zookeeper_log_threshold: WARN
+
+#Log purging & intervals
+# Run every purge_interval hours, keep  retain_count copies
+zookeeper_log_retain_count: 3
+zookeeper_log_purge_interval: 12
+
+# Set the ZooKeeper ID
+zookeeper_server_group: role=control

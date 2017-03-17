@@ -13,11 +13,17 @@
     path: "{{  zk_log_dir }}"
     state: absent
 
+- name: remove install directory
+  become: yes
+  file:
+    path: "{{  zk_install_dir }}"
+    state: absent
+
 - name: remove data directory
   become: yes
   file:
     path: "{{ zk_data_dir }}"
-    state: directory
+    state: absent
 
 - name: remove start_exhibitor script
   become: yes

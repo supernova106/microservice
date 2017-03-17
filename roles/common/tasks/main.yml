@@ -21,7 +21,6 @@
   - openjdk-8-jdk
   - libzmq1
   - dnsmasq
-  - network-manager
   when: ansible_os_family == 'Debian'
   tags:
     - common
