@@ -4,7 +4,12 @@ exhibitor_image_tag: latest
 exhibitor_s3_region: us-east-1
 exhibitor_s3_bucket: rzdev
 exhibitor_config_prefix: zkconfig
-exhibitor_hostname: zk
+exhibitor_hostname: "{{ inventory_hostname }}"
 exhibitor_size: 3
 zk_data_dir: /var/lib/zookeeper
 zk_log_dir: /var/log/zookeeper
+supervisord_exec_dir: /usr/local/bin
+supervisord_conf_dir: /etc/supervisord
+customized_bin_dir: /opt/bin
+zk_log_level: "info"
+zk_uninstall: False

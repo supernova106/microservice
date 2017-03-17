@@ -36,6 +36,7 @@
   - epel-release  
   - python-pip
   - python3-pip
+  - nmap-ncat
   - unzip 
   - curl
   - git
@@ -48,12 +49,8 @@
     - common
 
 - name: install latest awscli boto docker_py
-  pip:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-  - pip
-  ignore_errors: True
+  become: yes
+  command: "/usr/bin/pip install awscli boto docker_py --upgrade"
   tags:
     - common
 

@@ -6,4 +6,11 @@
     consul_servers_group: role=control
   roles:
     #- common
-    - consul
+    #- consul
+
+- hosts: role=control
+  vars:
+    consul_servers_group: role=control
+    zookeeper_server_group: role=control
+  roles:
+    - exhibitor

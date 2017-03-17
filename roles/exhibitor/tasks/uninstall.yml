@@ -1,0 +1,36 @@
+---
+- name: stop exhibitor supervisorctl
+  become: yes
+  supervisorctl: 
+    name: exhibitor
+    state: stopped
+    supervisorctl_path: "{{ supervisord_exec_dir }}/supervisorctl"
+  ignore_errors: yes
+
+- name: remove log directory
+  become: yes
+  file:
+    path: "{{  zk_log_dir }}"
+    state: absent
+
+- name: remove data directory
+  become: yes
+  file:
+    path: "{{ zk_data_dir }}"
+    state: directory
+
+- name: remove start_exhibitor script
+  become: yes
+  file:
+    path: "{{ customized_bin_dir }}/start_exhibitor.sh"
+    state: absent
+
+- name: remove exhibitor supervisor config
+  become: yes
+  file:
+    path: "{{ supervisord_conf_dir }}/exhibitor.conf"
+    state: absent
+  notify: reload supervisor
+
+
+

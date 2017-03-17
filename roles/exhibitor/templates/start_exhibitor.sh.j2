@@ -11,7 +11,7 @@ docker run --name $CONTAINER_NAME \
     -e ZK_DATA_DIR="{{ zk_data_dir }}" \
     -e ZK_LOG_DIR="{{ zk_log_dir }}" \
     -e ZK_ENSEMBLE_SIZE="{{ exhibitor_size }}" \
-    -e AWS_REGION="{{ exhibitor_s3_region }}"
+    -e AWS_REGION="{{ exhibitor_s3_region }}" \
     -e S3_BUCKET="{{ exhibitor_s3_bucket }}" \
     -e S3_PREFIX="{{ exhibitor_config_prefix }}" \
     -e HOSTNAME="{{ exhibitor_hostname }}" \
