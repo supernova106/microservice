@@ -34,6 +34,6 @@
     traefik_package: v1.1.2
     # Set it to a domain you control (EG domain.com) 
     # and add a star domain to route traffic. (EG *.marathon.localhost)
-    traefik_marathon_domain: marathon.domain
+    traefik_marathon_domain: dev.razerdev.com
   roles:
     - traefik

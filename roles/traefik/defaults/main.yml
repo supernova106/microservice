@@ -1,6 +1,6 @@
 ---
 traefik_package: v1.1.2
-traefik_marathon_endpoint: http://marathon.service.consul:18080
+traefik_marathon_endpoint: http://marathon.service.consul:8080
 traefik_tls_group: False
 traefik_config_dir: /etc/traefik.d
 

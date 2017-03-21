@@ -10,8 +10,7 @@
 - name: reload consul
   become: yes
   command: /usr/bin/consul reload
-ubuntu@ip-172-31-20-1:~/microservice$ cat roles/traefik/tasks/main.yml
----
+
 - name: install traefik
   become: yes
   get_url:
