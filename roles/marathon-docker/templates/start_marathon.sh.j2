@@ -1,0 +1,13 @@
+#!/bin/bash
+
+CONTAINER_NAME=marathon
+
+docker rm -f $CONTAINER_NAME
+docker run --name $CONTAINER_NAME \
+	-i \
+    --net=host \
+    -e MARATHON_MASTER={{ mesos_zk }} \
+    -e MARATHON_ZK={{ marathon_zk_connect }} \
+    -e MARATHON_LOGGING_LEVEL={{ marathon_log_level }} \
+    -e MARATHON_HOSTNAME={{ inventory_hostname }}.node.consul \
+    {{ marathon_docker_image }}:{{ marathon_version }}

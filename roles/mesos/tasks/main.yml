@@ -1,0 +1,34 @@
+---
+# tasks file for mesos
+- name: install mesos dependencies
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+  - libcurl4-nss-dev
+  - libsasl2-dev
+  - libsasl2-modules 
+  - maven 
+  - libapr1-dev 
+  - libsvn-dev
+  - zlib1g-dev
+  when: ansible_os_family == 'Debian'
+  tags:
+    - mesos
+
+- name: download mesos
+  become: yes
+  unarchive:
+    src: http://www.apache.org/dist/mesos/{{ mesos_pkg_version }}/mesos-{{ mesos_pkg_version }}.tar.gz
+    dest: /var/tmp/
+    remote_src: True
+  ignore_errors: "{{ ansible_check_mode }}"
+  tags:
+    - mesos
+
+- name: setup mesos
+  become: yes
+  script: 

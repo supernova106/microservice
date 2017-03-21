@@ -1,0 +1,11 @@
+{ 
+  "service": {
+    "name": "mesos-leader",
+    "port": 5050,
+    "check": {
+      "script": "/opt/bin/supervisor_service_check.sh mesos_master",
+      "interval": "15s",
+      "timeout": "2s"
+    }
+  }
+}

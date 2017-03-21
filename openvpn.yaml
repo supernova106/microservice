@@ -1,0 +1,11 @@
+- hosts: rz-control-01
+  become: yes
+  vars:
+    openvpn_key_org: The Company
+    openvpn_key_email: binh.nguyen@example.com
+    openvpn_use_pam: yes
+    openvpn_clients: [cluster_name]
+    openvpn_use_pam_users:
+      - { name: user1, password: password1 }
+  roles:
+    - Stouts.openvpn

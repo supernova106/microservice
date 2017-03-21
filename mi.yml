@@ -12,5 +12,19 @@
   vars:
     consul_servers_group: role=control
     zookeeper_server_group: role=control
+    mesos_mode: leader
   roles:
-    - exhibitor
+    #- exhibitor
+    - mesos-docker
+    - marathon-docker
+
+- hosts: role=worker
+  # role=worker hosts are a subset of "all". Since we already gathered facts on
+  # all servers, we can skip it here to speed up the deployment.
+  gather_facts: no
+  vars:
+    mesos_mode: follower
+    zookeeper_server_group: role=control
+  roles:
+    - mesos-docker
+

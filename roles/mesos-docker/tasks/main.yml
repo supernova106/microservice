@@ -1,0 +1,94 @@
+---
+- name: pull mesos-master docker image
+  become: yes
+  docker_image:
+    name: "{{ mesos_master_img }}"
+    tag: "{{ mesos_master_tag }}"
+
+- name: pull mesos-slave docker image
+  become: yes
+  docker_image:
+    name: "{{ mesos_slave_img }}"
+    tag: "{{ mesos_slave_tag }}"
+
+- name: setup start_mesos_slave script
+  become: yes
+  template:
+    src: start_mesos_slave.sh.j2
+    dest: "{{ customized_bin_dir }}/start_mesos_slave.sh"
+    mode: 0755
+  notify: restart mesos slave
+  when: mesos_mode == "follower"
+  tags:
+    - mesos
+
+- name: setup start_mesos_master script
+  become: yes
+  template:
+    src: start_mesos_master.sh.j2
+    dest: "{{ customized_bin_dir }}/start_mesos_master.sh"
+    mode: 0755
+  notify: restart mesos master
+  when: mesos_mode == "leader"
+  tags:
+    - mesos
+
+- name: config mesos master supervisord
+  become: yes
+  template: 
+    src: mesos_master_supervisord.conf.j2
+    dest: "{{ supervisord_conf_dir }}/mesos_master.conf"
+  notify: restart mesos master
+  when: mesos_mode == "leader"
+  tags:
+    - mesos
+
+- name: config mesos slave supervisord
+  become: yes
+  template: 
+    src: mesos_slave_supervisord.conf.j2 
+    dest: "{{ supervisord_conf_dir }}/mesos_slave.conf"
+  notify: restart mesos slave
+  when: mesos_mode == "follower"
+  tags:
+    - mesos
+
+- name: start mesos master supervisord
+  become: yes
+  supervisorctl: 
+    name: mesos_master 
+    state: present
+    supervisorctl_path: "{{ supervisord_exec_dir }}/supervisorctl"
+  when: mesos_mode == "leader"
+  tags:
+    - mesos
+
+- name: start mesos slave supervisord
+  become: yes
+  supervisorctl: 
+    name: mesos_slave 
+    state: present
+    supervisorctl_path: "{{ supervisord_exec_dir }}/supervisorctl"
+  when: mesos_mode == "follower"
+  tags:
+    - mesos
+
+- name: setup consul service check mesos master
+  become: yes
+  template:
+    src: mesos_master_service.json
+    dest: /etc/consul.d/mesos_master_service.json
+  when: mesos_mode == "leader"
+  notify: reload consul
+  tags:
+    - mesos
+
+- name: setup consul service check mesos slave
+  become: yes
+  copy:
+    src: mesos_slave_service.json
+    dest: /etc/consul.d/mesos_slave_service.json
+  when: mesos_mode == "follower"
+  notify: reload consul
+  tags:
+    - mesos

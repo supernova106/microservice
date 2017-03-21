@@ -1,0 +1,29 @@
+#!/bin/bash
+
+CONTAINER_NAME=mesos_slave
+
+docker rm -f $CONTAINER_NAME
+docker run -i --net=host --privileged --name $CONTAINER_NAME \
+        -e MESOS_PORT={{ mesos_follower_port }} \
+        -e MESOS_RESOURCES='{{ mesos_resources | join (";") }}' \
+        -e MESOS_MASTER={{ mesos_zk }} \
+        -e MESOS_IP=0.0.0.0 \
+        -e MESOS_HOSTNAME={{ mesos_hostname | default(inventory_hostname + ".node.consul") }} \
+        -e MESOS_CONTAINERIZERS=docker,mesos \
+        -e MESOS_WORK_DIR={{ mesos_work_dir }} \
+        -e MESOS_LOG_DIR={{ mesos_log_dir }} \
+        -e MESOS_LOGGING_LEVEL={{ mesos_log_level }} \
+        -e MESOS_ATTRIBUTES='{{ mesos_attributes | join (";") }}' \
+        -e MESOS_ISOLATION={{ mesos_isolation }} \
+        -e MESOS_EXECUTOR_REGISTRATION_TIMEOUT={{ mesos_executor_registration_timeout }} \
+        -v {{ mesos_work_dir }}:{{ mesos_work_dir }} \
+        -v {{ mesos_log_dir }}:{{ mesos_log_dir }} \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v /cgroup:/cgroup \
+        -v /sys:/sys \
+        -v "$(which docker)":/usr/bin/docker \
+        -v /proc:/host/proc:ro \
+        -v /data/docker:/data/docker \
+        {{ mesos_slave_img }}:{{ mesos_slave_tag }}
+
+

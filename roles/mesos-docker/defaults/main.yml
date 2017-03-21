@@ -1,0 +1,30 @@
+---
+mesos_version: 1.2.0
+supervisord_exec_dir: /usr/local/bin
+supervisord_conf_dir: /etc/supervisord
+customized_bin_dir: /opt/bin
+cluster_name: rz
+mesos_mode: follower
+mesos_zk_port: 2181
+mesos_zk_hosts: "{% for host in groups[zookeeper_server_group] %}{{ host }}.node.consul:{{mesos_zk_port}}{% if not loop.last %},{% endif %}{% endfor %}"
+mesos_zk: "zk://{{ mesos_zk_hosts }}/{{ cluster_name }}"
+mesos_leader_port: 15050
+mesos_leader_proxy_port: 5050
+mesos_follower_port: 5051
+mesos_log_level: WARNING
+mesos_work_dir: /var/lib/mesos
+mesos_log_dir: /var/log/mesos
+mesos_master_img: mesosphere/mesos-master
+mesos_slave_img: mesosphere/mesos-slave
+mesos_master_tag: 1.2.0-rc2
+mesos_slave_tag: 1.2.0-rc2
+mesos_resources:
+  - "ports(*):[4000-5000, 7000-8000, 9000-10000, 25000-26000, 31000-32000]"
+
+mesos_attributes:
+  - "type:public"
+  - "node_id:{{ inventory_hostname }}"
+
+mesos_isolation: cgroups/cpu,cgroups/mem
+mesos_executor_registration_timeout: 10mins
+mesos_leaders_group: role=control

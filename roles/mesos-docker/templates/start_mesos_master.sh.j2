@@ -1,0 +1,21 @@
+#!/bin/bash
+
+CONTAINER_NAME=mesos_master
+
+docker rm -f $CONTAINER_NAME
+docker run -i --net=host --name $CONTAINER_NAME \
+    -e MESOS_ZK={{ mesos_zk }} \
+    -e MESOS_PORT={{ mesos_leader_proxy_port }} \
+    -e MESOS_ADVERTISE_IP={{ private_ipv4 }} \
+    -e MESOS_IP={{ private_ipv4 }} \
+    -e MESOS_QUORUM=2 \
+    -e MESOS_HOSTNAME={{ mesos_hostname | default(inventory_hostname + ".node.consul") }} \
+    -e MESOS_REGISTRY=in_memory \
+    -e MESOS_CLUSTER={{ cluster_name }} \
+    -e MESOS_LOG_DIR={{ mesos_log_dir }} \
+    -e MESOS_LOGGING_LEVEL={{ mesos_log_level }} \
+    -e MESOS_WORK_DIR={{ mesos_work_dir }} \
+    -v {{ mesos_work_dir }}:{{ mesos_work_dir }} \
+    -v {{ mesos_log_dir }}:{{ mesos_log_dir }} \
+    {{ mesos_master_img }}:{{ mesos_master_tag }}
+

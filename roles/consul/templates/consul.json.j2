@@ -3,6 +3,9 @@
     "advertise_addr": "{{ consul_advertise }}",
     "rejoin_after_leave": true,
     "domain": "consul",
+{% if inventory_hostname %}
+    "node_name": "{{ inventory_hostname }}",
+{% endif %}
     "log_level": "{{ consul_log_level }}",
     "retry_join": [ {{ consul_retry_join }} ],
 {% if consul_is_server|bool %}

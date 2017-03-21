@@ -8,14 +8,14 @@ fi
 
 # Non-server nodes can be restart immediately with no effect on the quorum
 #
-if [ $(consul-cli agent-self ${ccargs} | jq -r .Member.Tags.role) == node ]; then
+if [ $(consul-cli agent self ${ccargs} | jq -r .Member.Tags.role) == node ]; then
   systemctl restart consul
 
   exit 0
 fi
 
 # Try to acquire a lock on 'locks/consul'
-sessionid=$(consul-cli kv-lock ${ccargs} locks/consul)
+sessionid=$(consul-cli kv lock ${ccargs} locks/consul)
 
 # Lock acquired. Pause briefly to allow the previous holder to restart
 # If it takes longer than five seconds run `systemctl restart consul`

@@ -1,0 +1,42 @@
+---
+- name: pull marathon docker image
+  become: yes
+  docker_image:
+    name: "{{ marathon_docker_image }}"
+    tag: "{{ marathon_version }}"
+
+- name: setup start_marathon script
+  sudo: yes
+  template:
+    src: start_marathon.sh.j2
+    dest: /opt/bin/start_marathon.sh
+    mode: 0755
+  notify: restart marathon
+  tags:
+    - marathon
+    
+- name: config marathon supervisord
+  sudo: yes
+  template: src=marathon_supervisord.conf.j2 dest=/etc/supervisord/marathon.conf
+  notify: restart marathon
+  tags:
+    - marathon
+
+- name: start marathon supervisord
+  sudo: yes
+  supervisorctl: 
+    name: marathon
+    state: present
+    supervisorctl_path: "{{ supervisord_exec_dir }}/supervisorctl"
+  tags:
+    - marathon
+
+- name: setup consul service check marathon
+  sudo: yes
+  template:
+    src: marathon_service.json.j2
+    dest: /etc/consul.d/marathon_service.json
+  notify: reload consul config
+  tags:
+    - marathon
+

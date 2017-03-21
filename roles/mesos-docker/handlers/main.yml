@@ -1,0 +1,16 @@
+---
+- name: restart mesos master
+  become: yes
+  supervisorctl: 
+    name: mesos_master
+    state: restarted
+    supervisorctl_path: "{{ supervisord_exec_dir }}/supervisorctl"
+
+- name: restart mesos slave
+  become: yes
+  supervisorctl: 
+    name: mesos_slave
+    state: restarted
+    supervisorctl_path: "{{ supervisord_exec_dir }}/supervisorctl"
+
+- include: consul.yml

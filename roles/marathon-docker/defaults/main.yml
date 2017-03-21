@@ -1,0 +1,11 @@
+---
+marathon_version: v1.4.2-snapshot3
+marathon_docker_image: mesosphere/marathon
+supervisord_conf_dir: /etc/supervisord
+supervisord_exec_dir: /usr/local/bin
+marathon_zk_hosts: "{% for host in groups[zookeeper_server_group] %}{{ host }}.node.consul:{{ marathon_zk_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+marathon_zk_port: 2181
+marathon_zk_chroot: marathon
+marathon_zk_connect: "zk://{{ marathon_zk_hosts }}/{{ marathon_zk_chroot }}"
+marathon_proxy_port: 8080
+marathon_log_level: warn

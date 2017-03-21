@@ -1,0 +1,4 @@
+---
+- name: reload consul
+  become: yes
+  command: "/usr/bin/consul reload"
