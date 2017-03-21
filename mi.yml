@@ -5,8 +5,8 @@
     # set which role is consul server
     consul_servers_group: role=control
   roles:
-    #- common
-    #- consul
+    - common
+    - consul
 
 - hosts: role=control
   vars:
@@ -14,7 +14,7 @@
     zookeeper_server_group: role=control
     mesos_mode: leader
   roles:
-    #- exhibitor
+    - exhibitor
     - mesos-docker
     - marathon-docker
 
@@ -34,6 +34,6 @@
     traefik_package: v1.1.2
     # Set it to a domain you control (EG domain.com) 
     # and add a star domain to route traffic. (EG *.marathon.localhost)
-    traefik_marathon_domain: dev.razerdev.com
+    traefik_marathon_domain: marathon.local
   roles:
     - traefik

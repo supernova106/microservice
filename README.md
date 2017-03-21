@@ -3,8 +3,16 @@
 - simple & easy to manage
 
 # Dependencies
-- [docker-zk-exhibitor](https://github.com/supernova106/docker-zk-exhibitor.git)
-- [marathon](https://github.com/mesosphere/marathon)
+- [docker-zk-exhibitor](https://github.com/supernova106/docker-zk-exhibitor.git) 
+- [marathon](https://github.com/mesosphere/marathon) mesosphere/marathon:v1.4.2-snapshot3
+- mesosphere/mesos-slave:1.2.0-rc2
+- mesosphere/mesos-master:1.2.0-rc2
+- supervisor:3.3.1
+- zookeeper:3.4.9
+- traefik:1.1.2
+- consul:0.7.5
+- consul-cli:0.3.1
+- dnsmasq: Make sure dnsmasq forward DNS query to Consul DNS interface
 
 # Optionals
 - https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server-on-ubuntu-16-04 

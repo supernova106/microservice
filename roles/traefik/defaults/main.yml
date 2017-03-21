@@ -18,3 +18,5 @@ traefik_marathon_expose_by_default: "true"
 # traefik_fluentd_agent_tag: latest
 # traefik_fluentd_master_host: fluentd.service.consul
 # traefik_fluentd_master_port: 24224
+
+consul_config_dir: /etc/consul.d
