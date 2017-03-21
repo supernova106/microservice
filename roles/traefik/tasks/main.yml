@@ -1,0 +1,105 @@
+---
+- name: reload systemd
+  become: yes
+  command: systemctl daemon-reload
+
+- name: restart traefik
+  become: yes
+  command: systemctl restart traefik
+
+- name: reload consul
+  become: yes
+  command: /usr/bin/consul reload
+ubuntu@ip-172-31-20-1:~/microservice$ cat roles/traefik/tasks/main.yml
+---
+- name: install traefik
+  become: yes
+  get_url:
+    url: https://github.com/containous/traefik/releases/download/{{ traefik_package }}/traefik
+    dest: /usr/bin/
+    mode: 0775
+  # when: ansible_os_family == 'Debian'
+  tags:
+    - traefik
+    - bootstrap
+
+- name: create traefik log folder
+  become: yes
+  file:
+    dest: "{{ traefik_log_dir }}"
+    state: directory
+    mode: 0755
+  tags:
+    - traefik
+    - bootstrap
+
+- name: create traefik access log file
+  become: yes
+  command: touch "{{ traefik_log_dir }}/access.log"
+  args:
+    creates: "{{ traefik_log_dir }}/access.log"
+  tags:
+    - traefik
+    - bootstrap
+
+- name: create directory for local traefik service override
+  become: yes
+  file:
+    dest: /etc/systemd/system/traefik.service.d
+    state: directory
+    mode: 0755
+  tags:
+    - traefik
+    - bootstrap
+
+- name: add systemd traefik servicer
+  become: yes
+  template:
+    src: traefik_service.conf.j2
+    dest: /etc/systemd/system/traefik.service
+    mode: 0644
+  tags:
+    - traefik
+    - bootstrap
+
+- name: create directory for local traefik configuration
+  become: yes
+  file:
+    dest: "{{ traefik_config_dir }}"
+    state: directory
+    mode: 0755
+  tags:
+    - traefik
+
+- name: add traefik configuration file
+  become: yes
+  template:
+    src: traefik.toml.j2
+    dest: "{{ traefik_config_dir }}/traefik.toml"
+    # owner: traefik
+    # group: traefik
+    mode: 0644
+    backup: yes
+  notify:
+    - restart traefik
+  tags:
+    - traefik
+
+- name: register traefik with consul service
+  become: yes
+  copy:
+    src: traefik_service.json
+    dest: "{{ consul_config_dir }}/traefik_service.json"
+  notify:
+    - reload consul
+  tags:
+    - traefik
+
+- name: start traefik service
+  become: yes
+  service:
+    name: traefik
+    enabled: yes
+    state: started
+  tags:
+    - traefik

@@ -1,0 +1,12 @@
+---
+- name: reload systemd
+  become: yes
+  command: systemctl daemon-reload
+
+- name: restart traefik
+  become: yes
+  command: systemctl restart traefik
+
+- name: reload consul
+  become: yes
+  command: /usr/bin/consul reload
