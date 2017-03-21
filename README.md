@@ -27,4 +27,9 @@ push "dhcp-option DNS 10.2.2.215"
 - AWS
 - Ubuntu 16.04
 
+# Contributors
+- [Binh Nguyen](https://github.com/supernova106)
+- [Trang Nguyen](https://github.com/thutrang-nguyen)
+
 # Contact
+- Binh Nguyen
