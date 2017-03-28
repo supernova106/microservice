@@ -1,0 +1,11 @@
+[program:kong-dashboard]
+command= /opt/bin/start_kong_dashboard.sh
+autostart=true
+autostart=true
+autorestart=true
+startretries=999
+redirect_stderr=True
+nodaemon = False
+debug = False
+loglevel = "info"
+stopasgroup=true

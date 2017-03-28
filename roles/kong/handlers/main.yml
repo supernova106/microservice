@@ -1,0 +1,26 @@
+---
+# handlers file for kong
+- name: reload kong
+  become: yes
+  shell: "docker exec -it kong kong reload"
+
+- name: restart kong
+  become: yes
+  supervisorctl: 
+    name: kong
+    state: restarted
+    supervisorctl_path: "{{ supervisord_exec_dir }}/supervisorctl"
+
+- name: restart kong database
+  become: yes
+  supervisorctl: 
+    name: kong-database
+    state: restarted
+    supervisorctl_path: "{{ supervisord_exec_dir }}/supervisorctl"
+
+- name: restart kong dashboard
+  become: yes
+  supervisorctl: 
+    name: kong-dashboard
+    state: restarted
+    supervisorctl_path: "{{ supervisord_exec_dir }}/supervisorctl"

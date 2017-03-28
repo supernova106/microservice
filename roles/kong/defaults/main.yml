@@ -1,0 +1,9 @@
+---
+# defaults file for kong
+supervisord_exec_dir: /usr/local/bin
+supervisord_conf_dir: /etc/supervisord
+customized_bin_dir: /opt/bin
+cassandra_version: 3.10
+
+kong_dashboard_user: "admin"
+kong_dashboard_password: "admin"

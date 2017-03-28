@@ -1,0 +1,14 @@
+#!/bin/bash
+
+CONTAINER_NAME=kong
+
+docker rm -f $CONTAINER_NAME
+docker run -i --name $CONTAINER_NAME \
+	--net=host \
+	-e KONG_LOG_LEVEL=info \
+	-e KONG_DATABASE=cassandra \
+	-e KONG_CASSANDRA_CONTACT_POINTS=127.0.0.1 \
+	-e KONG_CASSANDRA_PORT=9042 \
+	-v /usr/local/kong:/usr/local/kong:rw \
+	-v /etc/kong:/etc/kong:rw \
+	kong:latest

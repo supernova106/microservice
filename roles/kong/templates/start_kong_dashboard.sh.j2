@@ -1,0 +1,9 @@
+#!/bin/bash
+
+CONTAINER_NAME=kong-dashboard
+
+docker rm -f $CONTAINER_NAME
+docker run -i --name $CONTAINER_NAME \
+	--net=host \
+	-p 8080:8080 \
+	pgbi/kong-dashboard npm start -- -a {{ kong_dashboard_user }}={{ kong_dashboard_password }}

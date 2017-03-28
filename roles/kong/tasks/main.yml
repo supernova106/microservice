@@ -1,0 +1,113 @@
+---
+# tasks file for kong
+- name: pull cassandra docker image
+  become: yes
+  docker_image:
+    name: cassandra
+    tag: "{{ cassandra_version }}"
+  tags:
+    - kong
+
+- name: pull kong docker image
+  become: yes
+  docker_image:
+    name: kong
+  tags:
+    - kong
+
+- name: pull kong dashboard image
+  become: yes
+  docker_image:
+    name: pgbi/kong-dashboard
+  tags:
+    - kong
+
+- name: setup start kong script
+  become: yes
+  template:
+    src: start_kong.sh.j2
+    dest: "{{ customized_bin_dir }}/start_kong.sh"
+    mode: 0755
+  notify: restart kong
+  tags:
+    - kong
+
+- name: setup start kong database script
+  become: yes
+  template:
+    src: start_kong_database.sh.j2
+    dest: "{{ customized_bin_dir }}/start_kong_database.sh"
+    mode: 0755
+  notify: restart kong database
+  tags:
+    - kong
+
+- name: setup start kong dashboard script
+  become: yes
+  template:
+    src: start_kong_dashboard.sh.j2
+    dest: "{{ customized_bin_dir }}/start_kong_dashboard.sh"
+    mode: 0755
+  notify: restart kong dashboard
+  tags:
+    - kong
+
+- name: config kong supervisord
+  become: yes
+  template: 
+    src: kong_supervisord.conf.j2
+    dest: "{{ supervisord_conf_dir }}/kong.conf"
+  notify: restart kong
+  tags:
+    - kong
+
+- name: config kong database supervisord
+  become: yes
+  template: 
+    src: kong_database_supervisord.conf.j2
+    dest: "{{ supervisord_conf_dir }}/kong_database.conf"
+  notify: restart kong database
+  tags:
+    - kong
+
+- name: config kong dashboard supervisord
+  become: yes
+  template: 
+    src: kong_dashboard_supervisord.conf.j2
+    dest: "{{ supervisord_conf_dir }}/kong_dashboard.conf"
+  notify: restart kong dashboard
+  tags:
+    - kong
+
+- name: start kong database supervisord
+  become: yes
+  supervisorctl: 
+    name: kong-database 
+    state: present
+    supervisorctl_path: "{{ supervisord_exec_dir }}/supervisorctl"
+  tags:
+    - kong-database
+
+- name: start kong supervisord
+  become: yes
+  supervisorctl: 
+    name: kong 
+    state: present
+    supervisorctl_path: "{{ supervisord_exec_dir }}/supervisorctl"
+  tags:
+    - kong
+
+- name: start kong dashboard supervisord
+  become: yes
+  supervisorctl: 
+    name: kong-dashboard 
+    state: present
+    supervisorctl_path: "{{ supervisord_exec_dir }}/supervisorctl"
+  tags:
+    - kong
+
+- name: check if kong is running
+  become: yes
+  wait_for:
+    host: 127.0.0.1
+    port: 8001
