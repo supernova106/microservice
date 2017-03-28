@@ -13,6 +13,7 @@
 - consul:0.7.5
 - consul-cli:0.3.1
 - dnsmasq: Make sure dnsmasq forward DNS query to Consul DNS interface
+- Kong: proxy request on port 8000 to Traefik, Kong API is default at 8001
 
 # Optionals
 - https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server-on-ubuntu-16-04 
